@@ -31,6 +31,7 @@ public:
     void checkCollision(Vehicle &vehicle) {
         for (auto it = vehicles.begin(); it != vehicles.end(); ) {
             if (it->second.id != vehicle.id && it->second.posX == vehicle.posX && it->second.posY == vehicle.posY) {
+                std::cout << "Wykryto kolizje!\n";
                 vehicles.erase(it++);
             } else {
                 ++it;
@@ -70,14 +71,14 @@ public:
 
 int main() {
     int boardSize;
-    std::cout << "Enter board size: ";
+    std::cout << "Podaj rozmiar planszy: ";
     std::cin >> boardSize;
     Board board(boardSize);
 
-    std::cout << "\nInstructions:\n";
-    std::cout << "To move all vehicles one step to the right and down, type 'move'.\n";
-    std::cout << "To add a vehicle, type 'add' followed by the vehicle ID, X position, and Y position (e.g., 'add 1 0 0').\n";
-    std::cout << "To quit, type 'quit'.\n\n";
+    std::cout << "\nInstrukcje:\n";
+    std::cout << "Aby przesunac wszystkie pojazdy o jeden krok w prawo i w dol, wpisz 'move'.\n";
+    std::cout << "Aby dodac pojazd, wpisz 'add', a nastepnie ID pojazdu, pozycje X i pozycje Y (np. 'add 1 0 0').\n";
+    std::cout << "Aby zakonczyc, wpisz 'quit'.\n\n";
 
     std::string command;
     while (std::cin >> command) {
