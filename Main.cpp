@@ -7,34 +7,46 @@ public:
     int id;
     int posX;
     int posY;
+    int prevPosX;
+    int prevPosY;
 
-    Vehicle() : id(0), posX(0), posY(0) {}
-    Vehicle(int id, int posX, int posY) : id(id), posX(posX), posY(posY) {}
+    Vehicle() : id(0), posX(0), posY(0), prevPosX(0), prevPosY(0) {}
+    Vehicle(int id, int posX, int posY) : id(id), posX(posX), posY(posY), prevPosX(posX), prevPosY(posY) {}
 };
 
 class Board {
 public:
     int size;
     std::map<int, Vehicle> vehicles;
+    std::vector<std::vector<char>> collisionMap;
 
-    Board(int size) : size(size) {}
-
-    void moveVehicle(int id, int deltaX, int deltaY) {
-        if (vehicles.find(id) != vehicles.end()) {
-            Vehicle &vehicle = vehicles[id];
-            vehicle.posX = (vehicle.posX + deltaX + size) % size;
-            vehicle.posY = (vehicle.posY + deltaY + size) % size;
-            checkCollision(vehicle);
-        }
-    }
+    Board(int size) : size(size), collisionMap(size, std::vector<char>(size, '.')) {}
 
     void checkCollision(Vehicle &vehicle) {
         for (auto it = vehicles.begin(); it != vehicles.end(); ) {
             if (it->second.id != vehicle.id && it->second.posX == vehicle.posX && it->second.posY == vehicle.posY) {
                 std::cout << "Wykryto kolizje!\n";
+                collisionMap[vehicle.posY][vehicle.posX] = 'X';
                 vehicles.erase(it++);
+                vehicles.erase(vehicle.id);
+                break;
             } else {
                 ++it;
+            }
+        }
+    }
+    
+    void moveVehicle(int id, int deltaX, int deltaY) {
+        if (vehicles.find(id) != vehicles.end()) {
+            Vehicle &vehicle = vehicles[id];
+            vehicle.prevPosX = vehicle.posX;
+            vehicle.prevPosY = vehicle.posY;
+            vehicle.posX = (vehicle.posX + deltaX + size) % size;
+            vehicle.posY = (vehicle.posY + deltaY + size) % size;
+            if (collisionMap[vehicle.posY][vehicle.posX] == 'X') {
+                vehicles.erase(id);
+            } else {
+                checkCollision(vehicle);
             }
         }
     }
@@ -61,7 +73,12 @@ public:
                     }
                 }
                 if (!found) {
-                    std::cout << ".";
+                    if (collisionMap[i][j] == 'X') {
+                        std::cout << collisionMap[i][j];
+                        collisionMap[i][j] = '.'; // Reset the collision map at this position
+                    } else {
+                        std::cout << '.';
+                    }
                 }
             }
             std::cout << "\n";
