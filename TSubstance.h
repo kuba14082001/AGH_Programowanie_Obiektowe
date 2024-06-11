@@ -3,17 +3,17 @@
 #include <vector>
 
 
-class TSubstance
+class TSubstance	//klasa substancji
 {
-	std::string name;
-	double		ro;
+	std::string name;	//nazwa substancji
+	double		ro;	//gestosc substancji
 
 public:
-	TSubstance(std::string name, double ro);
+	TSubstance(std::string name, double ro); //konstruktor
 
-	std::string		get_name();
-	double			get_ro();
+	std::string		get_name();	// metoda get_name zwracajaca nazwe substancji
+	double			get_ro(); // metoda get_ro zwracajaca gestosc substancji
 };
 
-extern std::vector<TSubstance>substancje;
+extern std::vector<TSubstance>substancje; // deklaracja wektora substancji
 
